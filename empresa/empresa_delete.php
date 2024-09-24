@@ -7,7 +7,7 @@ require('../config/conexion.php');
 $nitEliminar = $_POST["nitEliminar"];
 
 // Query SQL a la BD
-$query = "DELETE FROM empresa WHERE nit = '$nitEliminar'";
+$query = "DELETE FROM asesor WHERE carnet = '$nitEliminar'";
 
 // Ejecutar consulta
 $result = mysqli_query($conn, $query) or die(mysqli_error($conn));

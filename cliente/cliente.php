@@ -8,7 +8,7 @@ $result1 = mysqli_query($conn, $query);
 ?>
 
 <!-- TÍTULO. Cambiarlo, pero dejar especificada la analogía -->
-<h1 class="mt-3">Entidad análoga a MECANICO (NOMBRE)</h1>   
+<h1 class="mt-3">Entidad análoga a MECANICO (CLIENTE)</h1>   
 
 <!-- FORMULARIO. Cambiar los campos de acuerdo a su trabajo -->
 <div class="formulario p-4 m-3 border rounded-3">
@@ -77,6 +77,7 @@ if($resultadoCliente and $resultadoCliente->num_rows > 0):
                 <th scope="col" class="text-center">Apellido</th>
                 <th scope="col" class="text-center">Año de nacimiento</th>
                 <th scope="col" class="text-center">Asesor</th>
+                <th scope="col" class="text-center">Acciones</th>
             </tr>
         </thead>
 
