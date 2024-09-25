@@ -6,11 +6,9 @@ include "../includes/header.php";
 <h1 class="mt-3">Consulta 2</h1>
 
 <p class="mt-3">
-    Sea sumavalor la suma de los valores de todos los proyectos asociados con un cliente.
-    El segundo botón debe mostrar el código y el valor de cada uno de los proyectos 
-    que cumple todas las siguientes condiciones: tiene un valor mayor que el 
-    presupuesto de la empresa que lo revisa y además el cliente que lo revisa es el 
-    gerente de la empresa que lo revisa.
+debe mostrar el carnet y el nombre de los asesores de los tres asesores que mayor dinero 
+(suma del valor de todas sus reservas) han recaudado a raíz de las reservas que han 
+hecho sus correspondientes clientes
 </p>
 
 <?php
@@ -18,7 +16,11 @@ include "../includes/header.php";
 require('../config/conexion.php');
 
 // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
-$query = "SELECT codigo, valor FROM proyecto";
+$query = "SELECT A.carnet, A.nombre, A.apellido, SUM(R.valor) AS ganancia
+FROM asesor AS A INNER JOIN cliente AS C ON A.carnet = C.asesor
+INNER JOIN reserva AS R ON C.documento_identidad = R.cliente
+GROUP BY A.carnet
+ORDER BY SUM(R.valor) DESC";
 
 // Ejecutar la consulta
 $resultadoC2 = mysqli_query($conn, $query) or die(mysqli_error($conn));
@@ -39,8 +41,10 @@ if($resultadoC2 and $resultadoC2->num_rows > 0):
         <!-- Títulos de la tabla, cambiarlos -->
         <thead class="table-dark">
             <tr>
-                <th scope="col" class="text-center">Cédula</th>
+                <th scope="col" class="text-center">Carnet</th>
                 <th scope="col" class="text-center">Nombre</th>
+                <th scope="col" class="text-center">Apellido</th>
+                <th scope="col" class="text-center">Ganancia</th>
             </tr>
         </thead>
 
@@ -54,8 +58,10 @@ if($resultadoC2 and $resultadoC2->num_rows > 0):
             <!-- Fila que se generará -->
             <tr>
                 <!-- Cada una de las columnas, con su valor correspondiente -->
-                <td class="text-center"><?= $fila["cedula"]; ?></td>
+                <td class="text-center"><?= $fila["carnet"]; ?></td>
                 <td class="text-center"><?= $fila["nombre"]; ?></td>
+                <td class="text-center"><?= $fila["apellido"]; ?></td>
+                <td class="text-center"><?= $fila["ganancia"]; ?></td>
             </tr>
 
             <?php

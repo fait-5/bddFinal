@@ -6,11 +6,7 @@ include "../includes/header.php";
 <h1 class="mt-3">Consulta 1</h1>
 
 <p class="mt-3">
-    Sea sumavalor la suma de los valores de todos los proyectos asociados con un cliente.
-    El primer botón debe mostrar la cédula y el nombre de cada uno de los clientes 
-    que cumple todas las siguientes condiciones: es gerente, tiene sumavalor > 1000,
-    ha revisado al menos 3 proyectos y la empresa que gerencia no ha revisado ni un
-    solo proyecto.
+    debe mostrar la cédula y el nombre de los tres clientes que más reservas han realizado.
 </p>
 
 <?php
@@ -18,7 +14,7 @@ include "../includes/header.php";
 require('../config/conexion.php');
 
 // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
-$query = "SELECT cedula, nombre FROM cliente";
+$query = "SELECT documento_identidad, nombre, apellido FROM cliente INNER JOIN reserva ON documento_identidad = cliente GROUP BY cliente ORDER BY COUNT(cliente) DESC";
 
 // Ejecutar la consulta
 $resultadoC1 = mysqli_query($conn, $query) or die(mysqli_error($conn));
@@ -39,8 +35,9 @@ if($resultadoC1 and $resultadoC1->num_rows > 0):
         <!-- Títulos de la tabla, cambiarlos -->
         <thead class="table-dark">
             <tr>
-                <th scope="col" class="text-center">Cédula</th>
+                <th scope="col" class="text-center">Documento</th>
                 <th scope="col" class="text-center">Nombre</th>
+                <th scope="col" class="text-center">Apellido</th>
             </tr>
         </thead>
 
@@ -54,8 +51,9 @@ if($resultadoC1 and $resultadoC1->num_rows > 0):
             <!-- Fila que se generará -->
             <tr>
                 <!-- Cada una de las columnas, con su valor correspondiente -->
-                <td class="text-center"><?= $fila["cedula"]; ?></td>
+                <td class="text-center"><?= $fila["documento_identidad"]; ?></td>
                 <td class="text-center"><?= $fila["nombre"]; ?></td>
+                <td class="text-center"><?= $fila["apellido"]; ?></td>
             </tr>
 
             <?php

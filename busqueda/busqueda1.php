@@ -6,9 +6,10 @@ include "../includes/header.php";
 <h1 class="mt-3">Búsqueda 1</h1>
 
 <p class="mt-3">
-    Dos fechas f1 y f2 (cada fecha con día, mes y año), f2 ≥ f1 y un número entero n,
-    n ≥ 0. Se debe mostrar la cédula y el celular de todos los clientes que han 
-    revisado exactamente n proyectos en dicho rango de fechas [f1, f2].
+La cédula de un cliente y un rango de fechas (es decir, dos fechas f1 y f2 
+(cada fecha con día, mes y año) y f2 >= f1). Se debe mostrar el total 
+recaudado por el cliente a raíz de las reservas que él cancelo junto con 
+el nombre del cliente.
 </p>
 
 <!-- FORMULARIO. Cambiar los campos de acuerdo a su trabajo -->
@@ -28,8 +29,8 @@ include "../includes/header.php";
         </div>
 
         <div class="mb-3">
-            <label for="numero" class="form-label">Número</label>
-            <input type="number" class="form-control" id="numero" name="numero" required>
+            <label for="documento_identidad" class="form-label">Documento</label>
+            <input type="number" class="form-control" id="documento_identidad" name="documento_identidad" required>
         </div>
 
         <button type="submit" class="btn btn-primary">Buscar</button>
@@ -47,10 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
 
     $fecha1 = $_POST["fecha1"];
     $fecha2 = $_POST["fecha2"];
-    $numero = $_POST["numero"];
+    $documento = $_POST["documento_identidad"];
 
     // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
-    $query = "SELECT cedula, celular FROM cliente";
+    $query = "SELECT nombre, SUM(valor) AS valor FROM cliente AS C INNER JOIN reserva AS R ON C.documento_identidad = R.cliente_cancela WHERE R.fecha_cancelacion >= $fecha1 AND R.fecha_cancelacion <= $fecha2 AND C.documento_identidad = $documento";
 
     // Ejecutar la consulta
     $resultadoB1 = mysqli_query($conn, $query) or die(mysqli_error($conn));
@@ -84,8 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
             <!-- Fila que se generará -->
             <tr>
                 <!-- Cada una de las columnas, con su valor correspondiente -->
-                <td class="text-center"><?= $fila["cedula"]; ?></td>
-                <td class="text-center"><?= $fila["celular"]; ?></td>
+                <td class="text-center"><?= $fila["nombre"]; ?></td>
+                <td class="text-center"><?= $fila["valor"]; ?></td>
             </tr>
 
             <?php

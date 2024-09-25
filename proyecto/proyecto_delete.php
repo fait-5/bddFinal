@@ -7,7 +7,7 @@ require('../config/conexion.php');
 $codigoEliminar = $_POST["codigoEliminar"];
 
 // Query SQL a la BD
-$query = "DELETE FROM proyecto WHERE codigo = '$codigoEliminar'";
+$query = "DELETE FROM reserva WHERE id_reserva = '$codigoEliminar'";
 
 // Ejecutar consulta
 $result = mysqli_query($conn, $query) or die(mysqli_error($conn));

@@ -42,7 +42,7 @@ $result1 = mysqli_query($conn, $query);
 
         <div class="mb-3">
             <label for="asesor" class="form-label">Asesor</label>
-            <select name="asesor" id="asesor">
+            <select name="asesor" id="asesor" class="form-select">
                 <?php while($row1 = mysqli_fetch_array($result1)):;?>
                     <option><?php echo $row1[0];?></option>
                 <?php endwhile;?>
