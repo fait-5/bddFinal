@@ -6,7 +6,7 @@ include "../includes/header.php";
 <h1 class="mt-3">Búsqueda 1</h1>
 
 <p class="mt-3">
-La cédula de un cliente y un rango de fechas (es decir, dos fechas f1 y f2 
+El documento de un cliente y un rango de fechas (es decir, dos fechas f1 y f2 
 (cada fecha con día, mes y año) y f2 >= f1). Se debe mostrar el total 
 recaudado por el cliente a raíz de las reservas que él cancelo junto con 
 el nombre del cliente.
@@ -51,12 +51,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
     $documento = $_POST["documento_identidad"];
 
     // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
-    $query = "SELECT nombre, SUM(valor) AS valor FROM cliente AS C INNER JOIN reserva AS R ON C.documento_identidad = R.cliente_cancela WHERE R.fecha_cancelacion >= $fecha1 AND R.fecha_cancelacion <= $fecha2 AND C.documento_identidad = $documento";
+    $query = "SELECT c.nombre, SUM(r.valor) as total
+    FROM cliente AS c INNER JOIN reserva AS r ON documento_identidad = cliente_cancela
+    WHERE c.documento_identidad = ?
+    AND r.fecha_cancelacion BETWEEN ? AND ?
+    GROUP BY c.nombre";
 
     // Ejecutar la consulta
-    $resultadoB1 = mysqli_query($conn, $query) or die(mysqli_error($conn));
-
-    mysqli_close($conn);
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("iss", $documento, $fecha1, $fecha2);
+    $stmt->execute();
+    $resultadoB1 = $stmt->get_result();
 
     // Verificar si llegan datos
     if($resultadoB1 and $resultadoB1->num_rows > 0):
@@ -70,8 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
         <!-- Títulos de la tabla, cambiarlos -->
         <thead class="table-dark">
             <tr>
-                <th scope="col" class="text-center">Cédula</th>
-                <th scope="col" class="text-center">Celular</th>
+                <th scope="col" class="text-center">Documento</th>
+                <th scope="col" class="text-center">Valor acumulado</th>
             </tr>
         </thead>
 
@@ -86,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
             <tr>
                 <!-- Cada una de las columnas, con su valor correspondiente -->
                 <td class="text-center"><?= $fila["nombre"]; ?></td>
-                <td class="text-center"><?= $fila["valor"]; ?></td>
+                <td class="text-center"><?= $fila["total"]; ?></td>
             </tr>
 
             <?php
