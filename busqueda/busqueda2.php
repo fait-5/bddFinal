@@ -37,10 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
     require('../config/conexion.php');
 
     $numero1 = $_POST["carnet"];
-    //$numero2 = $_POST["id_reserva"];
-    //$numero2 = $_POST["fecha_reserva"];
-    //$numero2 = $_POST["fecha_cancelacion"];
-    //$numero2 = $_POST["valor"];
 
     // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
     $query = "SELECT carnet, (select * from reserva)

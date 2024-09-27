@@ -14,14 +14,14 @@
 <body>
 <div class="container mt-5">
 
-    <h1>Trabajo final BD1 - (Título de su trabajo)</h1>
+    <h1>Trabajo final BD1 - (Despagar.com)</h1>
 
     <div class="informacion">
         <ul>
             <li><b>Materia:</b> Bases de Datos I</li>
             <li><b>Profesor:</b> Francisco Javier Moreno Arboleda</li>
             <li><b>Institución:</b> Universidad Nacional de Colombia sede Medellín</li>
-            <li><b>Semestre:</b> 2022-1</li>
+            <li><b>Semestre:</b> 2024-1</li>
         </ul>
     </div>
 
