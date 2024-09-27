@@ -8,8 +8,8 @@ include "../includes/header.php";
 <p class="mt-3">
 El documento de un cliente y un rango de fechas (es decir, dos fechas f1 y f2 
 (cada fecha con día, mes y año) y f2 >= f1). Se debe mostrar el total 
-recaudado por el cliente a raíz de las reservas que él cancelo junto con 
-el nombre del cliente.
+pagado por el cliente a raíz de las reservas que él cancelo a los otros junto con 
+el nombre del cliente que cancela.
 </p>
 
 <!-- FORMULARIO. Cambiar los campos de acuerdo a su trabajo -->
@@ -52,9 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
 
     // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
     $query = "SELECT c.nombre, SUM(r.valor) as total
-    FROM cliente AS c INNER JOIN reserva AS r ON documento_identidad = cliente_cancela
+    FROM cliente AS c INNER JOIN reserva AS r ON c.documento_identidad = r.cliente_cancela
     WHERE c.documento_identidad = ?
-    AND r.fecha_cancelacion BETWEEN ? AND ?
+    AND r.fecha_reserva BETWEEN ? AND ?
     GROUP BY c.nombre";
 
     // Ejecutar la consulta
@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
         <!-- Títulos de la tabla, cambiarlos -->
         <thead class="table-dark">
             <tr>
-                <th scope="col" class="text-center">Documento</th>
+                <th scope="col" class="text-center">Nombre Cliente</th>
                 <th scope="col" class="text-center">Valor acumulado</th>
             </tr>
         </thead>

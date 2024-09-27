@@ -14,7 +14,7 @@ include "../includes/header.php";
 require('../config/conexion.php');
 
 // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
-$query = "SELECT documento_identidad, nombre, apellido FROM cliente INNER JOIN reserva ON documento_identidad = cliente GROUP BY cliente ORDER BY COUNT(cliente) DESC";
+$query = "SELECT documento_identidad, nombre, apellido FROM cliente INNER JOIN reserva ON documento_identidad = cliente GROUP BY cliente ORDER BY COUNT(cliente) DESC LIMIT 3";
 
 // Ejecutar la consulta
 $resultadoC1 = mysqli_query($conn, $query) or die(mysqli_error($conn));

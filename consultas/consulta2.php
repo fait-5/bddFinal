@@ -20,7 +20,8 @@ $query = "SELECT A.carnet, A.nombre, A.apellido, SUM(R.valor) AS ganancia
 FROM asesor AS A INNER JOIN cliente AS C ON A.carnet = C.asesor
 INNER JOIN reserva AS R ON C.documento_identidad = R.cliente
 GROUP BY A.carnet
-ORDER BY SUM(R.valor) DESC";
+ORDER BY SUM(R.valor) DESC
+LIMIT 3";
 
 // Ejecutar la consulta
 $resultadoC2 = mysqli_query($conn, $query) or die(mysqli_error($conn));

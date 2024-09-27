@@ -19,8 +19,8 @@ include "../includes/header.php";
     <form action="busqueda2.php" method="post" class="form-group">
 
         <div class="mb-3">
-            <label for="numero1" class="form-label">Carnet Asesor</label>
-            <input type="number" class="form-control" id="numero1" name="numero1" required>
+            <label for="carnet" class="form-label">Carnet Asesor</label>
+            <input type="number" class="form-control" id="carnet" name="carnet" required>
         </div>
 
         <button type="submit" class="btn btn-primary">Buscar</button>
@@ -31,7 +31,7 @@ include "../includes/header.php";
 
 <?php
 // Dado que el action apunta a este mismo archivo, hay que hacer eata verificación antes
-if ($_SERVER['REQUEST_METHOD'] === 'POST'):
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["carnet"])):
 
     // Crear conexión con la BD
     require('../config/conexion.php');
@@ -39,11 +39,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
     $numero1 = $_POST["carnet"];
 
     // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
-    $query = "SELECT carnet, (select * from reserva)
-        from asesor INNER JOIN cliente ON carnet = asesor
-        INNER JOIN reserva ON fecha_cancelacion = documento_identidad
-        GROUP BY asesor
-        HAVING MIN(año_nacimiento)";
+    $query = "SELECT r.*
+    FROM reserva AS r
+    INNER JOIN cliente AS c ON r.cliente_cancela = c.documento_identidad
+    INNER JOIN asesor AS a ON c.asesor = a.carnet
+    WHERE c.año_nacimiento = (
+        SELECT MIN(c2.año_nacimiento)
+        FROM cliente AS c2
+        WHERE c2.asesor = a.carnet AND a.carnet = $numero1
+    )
+    AND r.cliente_cancela IS NOT NULL";
 
     // Ejecutar la consulta
     $resultadoB2 = mysqli_query($conn, $query) or die(mysqli_error($conn));
@@ -62,10 +67,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
         <!-- Títulos de la tabla, cambiarlos -->
         <thead class="table-dark">
             <tr>
-                <th scope="col" class="text-center">Carnet Asesor</th>
                 <th scope="col" class="text-center">id_reserva</th>
                 <th scope="col" class="text-center">fecha_reserva</th>
                 <th scope="col" class="text-center">fecha_cancelacion</th>
+                <th scope="col" class="text-center">cliente</th>
+                <th scope="col" class="text-center">cliente_cancela</th>
                 <th scope="col" class="text-center">valor</th>
             </tr>
         </thead>
@@ -80,10 +86,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
             <!-- Fila que se generará -->
             <tr>
                 <!-- Cada una de las columnas, con su valor correspondiente -->
-                <td class="text-center"><?= $fila["carnet"]; ?></td>
                 <td class="text-center"><?= $fila["id_reserva"]; ?></td>
                 <td class="text-center"><?= $fila["fecha_reserva"]; ?></td>
                 <td class="text-center"><?= $fila["fecha_cancelacion"]; ?></td>
+                <td class="text-center"><?= $fila["cliente"]; ?></td>
+                <td class="text-center"><?= $fila["cliente_cancela"]; ?></td>
                 <td class="text-center"><?= $fila["valor"]; ?></td>
             </tr>
 
